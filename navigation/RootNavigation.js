@@ -1,3 +1,4 @@
+/*
 import { Notifications } from 'expo';
 import React from 'react';
 import { StackNavigator } from 'react-navigation';
@@ -48,3 +49,5 @@ export default class RootNavigator extends React.Component {
     console.log(`Push notification ${origin} with data: ${JSON.stringify(data)}`);
   };
 }
+
+*/
