@@ -7,9 +7,9 @@ import { bindActionCreators } from 'redux';
 import { Text, View, Image, Linking } from 'react-native';
 import { Button, Card, CardSection, Input, Spinner } from './common';
 
-import {actionUpdateAppointment,actionListAppointments} from '../actions/events_actions';
+import {} from '../actions/events_actions';
 
-class AppointmentDetail extends Component {
+class EventDetail extends Component {
 
     static navigationOptions = {
         title: 'Detail'
@@ -19,13 +19,10 @@ class AppointmentDetail extends Component {
     render() {
 
         const {
-            id,
-            start_datetime,
-            end_datetime,
-            status,
-            user_id,
-            user
-        } = this.props.appointment;
+            _id,
+            client,
+            check
+        } = this.props.event;
 
         const {
             thumbnailStyle,
@@ -36,13 +33,8 @@ class AppointmentDetail extends Component {
         } = styles;
 
 
-        const statuses = [ "Canceled", "Pending","Confirmed", "Done", "Missed" ];
-
-
-        const reloadEventsList = () => {
-            console.log("reloadEventsList ...");
-            this.props.actionListAppointments(new Date().getMonth()+1 );
-        };
+        const statuses = [ "Ok", "Warning", "Critical" ];
+        const colors = [ "green", "orange", "red" ];
 
 
         return (
@@ -55,68 +47,36 @@ class AppointmentDetail extends Component {
                                source={require('../../img/sensu.png')}
                         />
                     </View>
-                    <View style={headerContentStyles}>
-                        <Text style={headerTextStyle}>{user.id} {user.email}</Text>
-                    </View>
                 </CardSection>
+
 
                 <CardSection>
                     <View style={headerContentStyles}>
-                        <Text style={headerTextStyle}>
-                        from: {new Date(start_datetime).toLocaleTimeString("en-US", {timeZone: "Asia/Riyadh"})}
-                        </Text>
+                        <Text style={headerTextStyle}>{_id}</Text>
                     </View>
                 </CardSection>
 
+
                 <CardSection>
                     <View style={headerContentStyles}>
-                        <Text style={headerTextStyle}>
-                        to: {new Date(end_datetime).toLocaleTimeString("en-US", {timeZone: "Asia/Riyadh"})}
-                        </Text>
+                        <Text style={headerTextStyle}>{check.output}</Text>
                     </View>
                 </CardSection>
+
+
 
                 <CardSection>
                     <View style={headerContentStyles}>
                         <Text style={headerTextStyle}>
-                        status: {statuses[status]}
+                        status:
+                        <Text style={{color: colors[check.status] }}>
+                            {statuses[check.status]}
+                        </Text>
                         </Text>
                     </View>
                 </CardSection>
 
 
-                <CardSection>
-                    <Button onPress={() => Linking.openURL(`tel:${user.mobile_number_auxiliary}`)}>
-                        Call: {user.mobile_number_auxiliary}
-                    </Button>
-                </CardSection>
-
-
-                <CardSection>
-                    <Button onPress={() =>  Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${user.address_latitude},${user.address_longitude}`)}>
-                        Map
-                    </Button>
-                </CardSection>
-
-
-                <CardSection>
-                    <Button onPress={() => this.props.actionUpdateAppointment(this.props.appointment.id,{ done_at: null, confirmed_at: null, canceled_at: new Date()}).then( () =>  reloadEventsList() )}>
-                        Cancel
-                    </Button>
-                </CardSection>
-
-
-                <CardSection>
-                    <Button onPress={() => this.props.actionUpdateAppointment(this.props.appointment.id,{ canceled_at: null, confirmed_at: new Date()}).then( () =>  reloadEventsList() )}>
-                        Confirm
-                    </Button>
-                </CardSection>
-
-                <CardSection>
-                    <Button onPress={() => this.props.actionUpdateAppointment(this.props.appointment.id,{ canceled_at: null, done_at: new Date()}).then( () =>  reloadEventsList() )}>
-                        Done
-                    </Button>
-                </CardSection>
 
             </Card>
         );
@@ -152,19 +112,18 @@ const styles = {
 
 
 function mapStateToProps(state) {
-    // console.log("AppointmentDetail mapStateToProps:",state.appointments.selected);
     return {
-        appointment: state.appointments.selected
+        event: state.events.selected
     };
 
 }
 
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ actionUpdateAppointment,actionListAppointments }, dispatch);
+    return bindActionCreators({ }, dispatch);
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(AppointmentDetail);
+export default connect(mapStateToProps, mapDispatchToProps)(EventDetail);
 
 

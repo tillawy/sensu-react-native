@@ -5,6 +5,7 @@ import {
     ACTION_BACK,
     ACTION_AUTH_REQUEST_SUCCESS,
     ACTION_EVENT_DETAIL_REQUEST_SUCCESS,
+    ACTION_EVENT_DETAILS,
     ACTION_NAVIGATE_TO_EVENTS_LIST
 } from '../actions/types';
 
@@ -36,6 +37,15 @@ export default (state = stateForIntroAction, action) => {
         }
     }
     switch (action.type) {
+
+        case  ACTION_EVENT_DETAILS:
+            console.log("ACTION_EVENT_DETAILS !!!");
+            nextState = AppNavigator.router.getStateForAction(
+                NavigationActions.navigate({ routeName: 'Event' }),
+                state
+            );
+            break;
+
 
         case ACTION_NAVIGATE_TO_EVENTS_LIST:
             console.log("ACTION_NAVIGATE_TO_EVENTS_LIST !!!");

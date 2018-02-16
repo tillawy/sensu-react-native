@@ -5,9 +5,7 @@ import axios from 'axios';
 
 import {
 
-    ACTION_EVENT_DETAIL_REQUEST,
-    ACTION_EVENT_DETAIL_REQUEST_SUCCESS,
-    ACTION_EVENT_DETAIL_REQUEST_FAILURE,
+    ACTION_EVENT_DETAILS,
 
     ACTION_EVENTS_LIST_REQUEST,
     ACTION_EVENTS_LIST_REQUEST_SUCCESS,
@@ -20,6 +18,13 @@ import {
     API_HOST
 } from '../constants';
 
+
+export const actionEventDetails = (event) => {
+    return({
+        type: ACTION_EVENT_DETAILS,
+        payload: event
+    });
+};
 
 export const actionListEvents = () => {
     

@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { actionAuth, actionCheckSavedTokens } from '../actions/auth_actions'
 import { Card, CardSection, Button as AppButton, NavBarButton } from './common'
 import { actionNavigateToEventsList, actionNavigateToLogin } from '../actions/nav_actions'
-import { Alert } from "react-native";
+import { Alert, View , Image} from "react-native";
 
 
 class IntroScreen extends Component {
@@ -41,7 +41,15 @@ class IntroScreen extends Component {
 
     render() {
         return (
-            <Card>
+            <Card>                
+                <CardSection>
+                    <View style={styles.thumbnailContainerStyle}>
+                        <Image style={styles.thumbnailStyle}
+                               source={require('../../img/sensu.png')}
+                        />
+                    </View>
+                </CardSection>
+
                 <CardSection>
                     <AppButton onPress={this.navigateToEventsList.bind(this)}>
                         Events
@@ -52,6 +60,22 @@ class IntroScreen extends Component {
     };
 };
 
+
+
+const styles = {
+
+    thumbnailStyle: {
+        height: 50,
+        width: 50
+    },
+    thumbnailContainerStyle: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 10,
+        marginRight: 10
+    },
+
+};
 
 
 function mapStateToProps(state) {

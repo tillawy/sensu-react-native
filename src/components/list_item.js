@@ -6,14 +6,13 @@ import { bindActionCreators } from 'redux';
 import { Text, TouchableWithoutFeedback, View } from 'react-native';
 
 import { CardSection } from './common';
-import { actionAppointmentDetail } from '../actions/events_actions';
+import { actionEventDetails } from '../actions/events_actions';
 
 
 class ListItem extends Component {
+    
     onRowPress() {
-        this.props.actionAppointmentDetail(this.props.appointment.id, this.props.uid, this.props.client ,this.props.accessToken, (appointment)=>{
-            console.log( "done actionAppointmentDetail ", appointment );
-        });
+        this.props.actionEventDetails(this.props.event);
     }
 
     render() {
@@ -65,13 +64,13 @@ const styles = {
 
 
 const mapStateToProps = ({ auth }) => {
-    const { uid, client, accessToken} = auth;
-    return { uid, client, accessToken };
+    const { } = auth;
+    return {  };
 };
 
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ actionAppointmentDetail }, dispatch);
+    return bindActionCreators({ actionEventDetails }, dispatch);
 }
 
 
