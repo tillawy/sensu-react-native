@@ -56,6 +56,7 @@ class EventsList extends Component {
     render() {
         return (
             <ListView
+                enableEmptySections={true}
                 dataSource={this.props.dataSource}
                 renderRow={this.renderRow}
                 refreshControl={
