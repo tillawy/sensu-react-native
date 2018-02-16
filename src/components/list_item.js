@@ -20,21 +20,24 @@ class ListItem extends Component {
         const { _id, check, output, occurrences , environment ,client} = this.props.event;
 
         const statuses = [ "Ok", "Warning", "Critical" ];
+        const colors = [ "green", "orange", "red" ];
 
         return (
             <TouchableWithoutFeedback onPress={this.onRowPress.bind(this)}>
                 <View style={styles.containersStyle}>
 
-                    <Text style={styles.titleStyle}>
-                        status: {statuses[check.status]}
+                    <Text style={styles.titleStyle}> 
+                        <Text style={{color: colors[check.status] }}>
+                            {statuses[check.status]}
+                        </Text>
                     </Text>
 
                     <Text style={styles.titleStyle}>
-                        id: {_id}
+                        Source: {client.name}
                     </Text>
 
                     <Text style={styles.titleStyle}>
-                        name: {check.name}
+                        Check: {check.name}
                     </Text>
                     
                 </View>
@@ -48,7 +51,8 @@ const styles = {
         fontSize: 18,
         paddingLeft: 15,
         borderBottomWidth: 1,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        borderBottomWidth:0
     },
     containersStyle:{
         borderBottomWidth: 1,

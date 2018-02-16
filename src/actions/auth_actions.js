@@ -93,8 +93,10 @@ export const actionLogin = (username, password, callback) => {
                 const asyncSaveAccessKeys = async () => {
                     try {
                         console.log(`AuthActions actionLogin ${KEY_USERNAME},${username}: ${KEY_PASSWORD},${password}`);
+                        
                         await AsyncStorage.setItem( KEY_PASSWORD , password);
                         await AsyncStorage.setItem( KEY_USERNAME , username);
+                        
                         console.log(`AuthActions actionLogin saved credentials`);
                     } catch (error) {
                         console.warn(error);
