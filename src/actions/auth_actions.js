@@ -9,6 +9,7 @@ import {
     ACTION_AUTH_REQUEST_FAILURE,
     ACTION_AUTH_REQUEST_SUCCESS,
     ACTION_AUTH_SAVED_CREDENTIALS,
+    ACTION_AUTH_CREDENTIALS_AVAILBLE,
     ACTION_LOGOUT
 } from './types';
 
@@ -37,12 +38,12 @@ export const actionCheckSavedTokens = () => {
                 }
 
                 dispatch({
-                    type: ACTION_AUTH_REQUEST_SUCCESS,
+                    type: ACTION_AUTH_CREDENTIALS_AVAILBLE,
                     payload: {username: username, password: password }
                 });
             } catch (error) {
                 console.warn(error.message);
-                this._appendMessage('AsyncStorage error: ' + error.message);
+                // this._appendMessage('AsyncStorage error: ' + error.message);
             }
         };
         asyncGetAccessKeys().done();

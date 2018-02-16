@@ -17,34 +17,26 @@ class ListItem extends Component {
     }
 
     render() {
-        const { id, start_datetime, end_datetime, status } = this.props.appointment;
+        const { _id, check, output, occurrences , environment ,client} = this.props.event;
 
-        const statuses = [ "Canceled", "Pending","Confirmed", "Done", "Missed" ];
+        const statuses = [ "Ok", "Warning", "Critical" ];
 
         return (
             <TouchableWithoutFeedback onPress={this.onRowPress.bind(this)}>
                 <View style={styles.containersStyle}>
 
                     <Text style={styles.titleStyle}>
-                        id: {id}
+                        status: {statuses[check.status]}
                     </Text>
 
                     <Text style={styles.titleStyle}>
-                        status: {statuses[status]}
+                        id: {_id}
                     </Text>
 
                     <Text style={styles.titleStyle}>
-                        Day: {new Date(start_datetime).toDateString()}
+                        name: {check.name}
                     </Text>
-
-                    <Text style={styles.titleStyle}>
-                        from: {new Date(start_datetime).toLocaleTimeString("en-US", {timeZone: "Asia/Riyadh"})}
-                    </Text>
-
-                    <Text style={styles.titleStyle}>
-                        to: {new Date(end_datetime).toLocaleTimeString("en-US", {timeZone: "Asia/Riyadh"})}
-                    </Text>
-
+                    
                 </View>
             </TouchableWithoutFeedback>
         );

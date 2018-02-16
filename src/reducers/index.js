@@ -6,6 +6,6 @@ import NavReducer from './navigation_reducer';
 
 export default combineReducers({
     nav: NavReducer ,
-    appointments: EventsReducer,
+    events: EventsReducer,
     auth: AuthReducer
 });

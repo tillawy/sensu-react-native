@@ -16,7 +16,7 @@ class LoginForm extends Component {
     
     componentDidMount(){
         console.log("LoginForm componentDidMount");
-        // this.props.actionCheckSavedTokens();
+        this.props.actionCheckSavedTokens();
     };
 
 
@@ -26,12 +26,10 @@ class LoginForm extends Component {
 
     onLoginFailure() {
         console.log("onLoginFailure()");
-
     }
 
     onLoginSuccess() {
         console.log("onLoginSuccess()");
-
     }
 
     renderButton() {

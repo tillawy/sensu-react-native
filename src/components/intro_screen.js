@@ -24,7 +24,7 @@ class IntroScreen extends Component {
     }
 
     navigateToEventsList(){
-        if (!this.props.accessToken){
+        if (!this.props.authToken){
             // Works on both iOS and Android
             Alert.alert(
                 'Login Required',
@@ -44,7 +44,7 @@ class IntroScreen extends Component {
             <Card>
                 <CardSection>
                     <AppButton onPress={this.navigateToEventsList.bind(this)}>
-                        Appointments
+                        Events
                     </AppButton>
                 </CardSection>
             </Card>
@@ -56,15 +56,10 @@ class IntroScreen extends Component {
 
 function mapStateToProps(state) {
     console.log("IntroScreen mapStateToProps:",state.auth);
-
     return {
-        /*uid: state.auth.uid,
-        client: state.auth.client,
-        accessToken: state.auth.accessToken,
-        availableAuthAction: state.auth.availableAuthAction,
-        */
+        authToken: state.auth.authToken,
+        xsrf: state.auth.xsrf
     };
-
 }
 
 

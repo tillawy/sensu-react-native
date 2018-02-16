@@ -8,6 +8,7 @@ import {
     ACTION_AUTH_REQUEST_SUCCESS,
     ACTION_AUTH_REQUEST_FAILURE,
     ACTION_AUTH_SAVED_CREDENTIALS,
+    ACTION_AUTH_CREDENTIALS_AVAILBLE,
     ACTION_LOGOUT
 } from '../actions/types';
 
@@ -82,7 +83,13 @@ export default (state = INITIAL_STATE, action) => {
                 authToken: action.payload.authToken,
                 error: '' 
             };
-
+        case ACTION_AUTH_CREDENTIALS_AVAILBLE:
+            return { ...state, 
+                username: action.payload.username, 
+                password: action.payload.password,
+                loading: false,
+                error: '' 
+            }
         case ACTION_AUTH_REQUEST_FAILURE:
             return { ...state, error: 'Authentication Failed.', password: '', loading: false };
         case ACTION_AUTH_SAVED_CREDENTIALS:
