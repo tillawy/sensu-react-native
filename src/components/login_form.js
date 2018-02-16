@@ -8,7 +8,7 @@ import { Button, Card, CardSection, Input, Spinner } from './common';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { actionLogin, actionUsernameChanged , actionPasswordChanged } from '../actions/auth_actions';
+import { actionCheckSavedTokens, actionLogin, actionUsernameChanged , actionPasswordChanged } from '../actions/auth_actions';
 
 
 class LoginForm extends Component {
@@ -16,6 +16,7 @@ class LoginForm extends Component {
     
     componentDidMount(){
         console.log("LoginForm componentDidMount");
+        // this.props.actionCheckSavedTokens();
     };
 
 
@@ -50,7 +51,7 @@ class LoginForm extends Component {
         // const { email, password } = this.state;
         // console.log(`logging in using: email: ${this.props.email}, password: ${this.props.password}`);
 
-        this.props.actionLogin(this.props.email,this.props.password,() => {
+        this.props.actionLogin(this.props.username,this.props.password,() => {
             console.log( `done LoginForm ` );
         });
 
@@ -62,11 +63,12 @@ class LoginForm extends Component {
             <Card >
                 <CardSection>
                     <Input
-                        label="Email:"
-                        placeholder="name@email.com"
-                        value={this.props.email}
+                        label="User:"
+                        placeholder="username"
+                        value={this.props.username}
+                        underlineColorAndroid='transparent'
                         onChangeText={this.props.actionUsernameChanged.bind(this)}
-                        style={{ height: 20, width: 100 }}
+                        style={{ height: 20, width: 100}}
                     />
                 </CardSection>
                 <CardSection>
@@ -75,8 +77,9 @@ class LoginForm extends Component {
                         placeholder="password"
                         value={this.props.password}
                         secureTextEntry
+                        underlineColorAndroid='transparent'
                         onChangeText={this.props.actionPasswordChanged.bind(this)}
-                        style={{ height: 20, width: 100 }}
+                        style={{ height: 20, width: 100}}
                     />
                 </CardSection>
 
@@ -104,14 +107,14 @@ const styles = StyleSheet.create({
 // export default LoginForm;
 
 const mapStateToProps = ({ auth }) => {
-    const { email, password, error, loading } = auth;
-    return { email, password, error, loading };
+    const { username, password, error, loading } = auth;
+    return { username, password, error, loading };
 };
 
 
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ actionLogin,actionPasswordChanged, actionUsernameChanged }, dispatch);
+    return bindActionCreators({ actionCheckSavedTokens, actionLogin,actionPasswordChanged, actionUsernameChanged }, dispatch);
 }
 
 

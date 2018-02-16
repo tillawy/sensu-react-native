@@ -4,16 +4,17 @@ import { AsyncStorage } from 'react-native';
 
 import {
     ACTION_AUTH_REQUEST,
+    ACTION_USERNAME_CHANGED,
+    ACTION_PASSWORD_CHANGED,
     ACTION_AUTH_REQUEST_FAILURE,
     ACTION_AUTH_REQUEST_SUCCESS,
+    ACTION_AUTH_SAVED_CREDENTIALS,
     ACTION_LOGOUT
 } from './types';
 
 
 import {
     API_HOST,
-    KEY_AUTH_TOKEN,
-    KEY_XSRF_TOKEN,
     KEY_USERNAME,
     KEY_PASSWORD
 } from '../constants';
@@ -27,19 +28,17 @@ export const actionCheckSavedTokens = () => {
     return (dispatch) => {
         const asyncGetAccessKeys = async () => {
             try {
-                const accessToken = await AsyncStorage.getItem(KEY_ACCESSTOKEN);
-                const uid = await AsyncStorage.getItem(KEY_UID);
-                const client = await AsyncStorage.getItem(KEY_CLIENT);
+                const username = await AsyncStorage.getItem(KEY_USERNAME);
+                const password = await AsyncStorage.getItem(KEY_PASSWORD);
+                console.log("AuthActions actionCheckSavedTokens ${username}:${password}");
 
-                if (!accessToken || !uid || !client){
+                if (!username || !password){
                     return;
                 }
 
-                setAxiosDefaultHeader(accessToken, client,uid);
-
                 dispatch({
                     type: ACTION_AUTH_REQUEST_SUCCESS,
-                    payload: {uid: uid, accessToken: accessToken, client: client}
+                    payload: {username: username, password: password }
                 });
             } catch (error) {
                 console.warn(error.message);
@@ -75,28 +74,27 @@ export const actionUsernameChanged = (text) => {
 };
 
 
-export const actionLogin = (username, password) => {
+export const actionLogin = (username, password, callback) => {
     // debugger
     console.log( `login_actions:actionLogin( ${username}:${password} )`)
     return (dispatch) => {
         dispatch({type: ACTION_AUTH_REQUEST});
         return axios.post(`${API_HOST}/login`, { user: username,  pass: password })
             .then(function (response) {
-                console.log("AuthActions actionLogin: ",response.headers);
+                // console.log("AuthActions actionLogin: ",response.headers);
 
                 let xsrf;
                 let authToken;
 
+                authToken = response.headers['set-cookie'][0].split("=")[1].split(";")[0];
+                xsrf = response.headers['set-cookie'][0].split("=")[3].split(";")[0];
+                console.log(`AuthActions actionLogin ${xsrf}:${authToken}`);
                 const asyncSaveAccessKeys = async () => {
                     try {
-                        xsrf = response.headers['uid'];
-                        authToken = response.headers['client'];
-                        
-
-                        await AsyncStorage.setItem(KEY_ACCESSTOKEN , accessToken);
-                        await AsyncStorage.setItem(KEY_UID , uid);
-                        await AsyncStorage.setItem(KEY_CLIENT , client);
-
+                        console.log(`AuthActions actionLogin ${KEY_USERNAME},${username}: ${KEY_PASSWORD},${password}`);
+                        await AsyncStorage.setItem( KEY_PASSWORD , password);
+                        await AsyncStorage.setItem( KEY_USERNAME , username);
+                        console.log(`AuthActions actionLogin saved credentials`);
                     } catch (error) {
                         console.warn(error);
                         this._appendMessage('AsyncStorage error: ' + error.message);
@@ -105,17 +103,18 @@ export const actionLogin = (username, password) => {
 
                 asyncSaveAccessKeys().then( () => {
 
-                    setAxiosDefaultHeader(accessToken, client,uid);
+                    setAxiosDefaultHeader(xsrf, authToken);
+                    
+                    callback();
 
                     dispatch({
                         type: ACTION_AUTH_REQUEST_SUCCESS,
-                        payload: {uid: uid, accessToken: accessToken, client: client}
+                        payload: {username: username, password: password, xsrf:xsrf, authToken:authToken}
                     });
                 });
 
 
-            })
-            .catch(function (error) {
+            }).catch(function (error) {
                 console.warn(error);
                 dispatch({
                     type: ACTION_AUTH_REQUEST_FAILURE,

@@ -1,10 +1,7 @@
 
 
-// export const API_HOST = "http://macbook-air.duckdns.org:3033";
-export const API_HOST = "https://api.thetruck.me";
+export const API_HOST = "http://sensu.devops.arabiaweather.com";
 
-export const KEY_ACCESSTOKEN = "@Store:accessToken";
-export const KEY_UID = "@Store:uid";
-export const KEY_CLIENT = "@Store:client";
-
+export const KEY_USERNAME = "@Store:username";
+export const KEY_PASSWORD = "@Store:password";
 

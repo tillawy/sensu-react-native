@@ -11,7 +11,7 @@ class IntroScreen extends Component {
 
     
     static navigationOptions = ({ navigation, screenProps }) => {
-        const action = !screenProps.auth.accessToken ? "Login" : "Logout";
+        const action = !screenProps.auth.authToken ? "Login" : "Logout";
         return {
             title: 'Welcome',
             headerRight: <NavBarButton onPress={() => navigation.navigate(`Navigate/${action}`)}>{action}</NavBarButton>,

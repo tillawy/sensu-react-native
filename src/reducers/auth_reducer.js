@@ -2,23 +2,22 @@
 import {AsyncStorage} from 'react-native';
 
 import {
-    ACTION_EMAIL_CHANGED,
+    ACTION_USERNAME_CHANGED,
     ACTION_PASSWORD_CHANGED,
     ACTION_AUTH_REQUEST,
     ACTION_AUTH_REQUEST_SUCCESS,
     ACTION_AUTH_REQUEST_FAILURE,
+    ACTION_AUTH_SAVED_CREDENTIALS,
     ACTION_LOGOUT
 } from '../actions/types';
 
 const INITIAL_STATE = {
-    email: '',
     password: '',
-    user: null,
+    username: '',
     error: '',
     loading: false,
-    accessToken: null,
-    uid: null,
-    client: null,
+    authToken: null,
+    xsrf: null,
     availableAuthAction: 'Login'
 };
 
@@ -37,7 +36,6 @@ export default (state = INITIAL_STATE, action) => {
     if ( action.type === "Navigation/NAVIGATE" &&  action.routeName === "Navigate/Logout") {
         const asyncSaveAccessKeys = async () => {
             try {
-
                 await AsyncStorage.removeItem(KEY_ACCESSTOKEN);
                 await AsyncStorage.removeItem(KEY_UID);
                 await AsyncStorage.removeItem(KEY_CLIENT);
@@ -52,7 +50,6 @@ export default (state = INITIAL_STATE, action) => {
         return { ...state,
             loading: false,
             error: '' ,
-            uid: null,
             client: null,
             accessToken: null
         };
@@ -61,8 +58,8 @@ export default (state = INITIAL_STATE, action) => {
 
     switch (action.type) {
 
-        case ACTION_EMAIL_CHANGED :
-            return { ...state, email: action.payload };
+        case ACTION_USERNAME_CHANGED :
+            return { ...state, username: action.payload };
         case ACTION_PASSWORD_CHANGED:
             return { ...state, password: action.payload };
         case ACTION_AUTH_REQUEST:
@@ -77,15 +74,19 @@ export default (state = INITIAL_STATE, action) => {
                 accessToken: null
             };*/
         case ACTION_AUTH_REQUEST_SUCCESS:
-            return { ...state,
+            return { ...state, 
+                username: action.payload.username, 
+                password: action.payload.password,
                 loading: false,
-                error: '' ,
-                uid: action.payload.uid,
-                client: action.payload.client,
-                accessToken: action.payload.accessToken
+                xsrf:  action.payload.xsrf,
+                authToken: action.payload.authToken,
+                error: '' 
             };
+
         case ACTION_AUTH_REQUEST_FAILURE:
             return { ...state, error: 'Authentication Failed.', password: '', loading: false };
+        case ACTION_AUTH_SAVED_CREDENTIALS:
+            return { ...state, username: action.payload.username, password: action.payload.password };
         default:
             return state;
     }
