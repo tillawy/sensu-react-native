@@ -4,6 +4,7 @@ import { AsyncStorage } from 'react-native';
 
 import {
     ACTION_AUTH_REQUEST,
+    ACTION_HOST_CHANGED,
     ACTION_USERNAME_CHANGED,
     ACTION_PASSWORD_CHANGED,
     ACTION_AUTH_REQUEST_FAILURE,
@@ -15,7 +16,7 @@ import {
 
 
 import {
-    API_HOST,
+    KEY_HOST,
     KEY_USERNAME,
     KEY_PASSWORD
 } from '../constants';
@@ -29,17 +30,19 @@ export const actionCheckSavedTokens = () => {
     return (dispatch) => {
         const asyncGetAccessKeys = async () => {
             try {
+                const host = await AsyncStorage.getItem(KEY_HOST);
                 const username = await AsyncStorage.getItem(KEY_USERNAME);
                 const password = await AsyncStorage.getItem(KEY_PASSWORD);
-                console.log("AuthActions actionCheckSavedTokens ${username}:${password}");
+                console.log(`AuthActions actionCheckSavedTokens ${host}:${username}:${password}`);
 
-                if (!username || !password){
+                if (!username || !password || !host){
                     return;
                 }
 
+
                 dispatch({
                     type: ACTION_AUTH_CREDENTIALS_AVAILBLE,
-                    payload: {username: username, password: password }
+                    payload: {host: host , username: username, password: password }
                 });
             } catch (error) {
                 console.warn(error.message);
@@ -74,13 +77,22 @@ export const actionUsernameChanged = (text) => {
     };
 };
 
+export const actionHostChanged = (text) => {
+    return {
+        type: ACTION_HOST_CHANGED,
+        payload: text
+    };
+}
 
-export const actionLogin = (username, password, callback) => {
+export const actionLogin = (host ,username, password) => {
     // debugger
-    console.log( `login_actions:actionLogin( ${username}:${password} )`)
+    console.log( `login_actions:actionLogin( ${host},${username},${password} )`)
     return (dispatch) => {
         dispatch({type: ACTION_AUTH_REQUEST});
-        return axios.post(`${API_HOST}/login`, { user: username,  pass: password })
+        const url = `${host}/login`;
+        console.log( `login_actions url:${url}`);
+
+        return axios.post(url, { user: username,  pass: password })
             .then(function (response) {
                 // console.log("AuthActions actionLogin: ",response.headers);
 
@@ -92,8 +104,9 @@ export const actionLogin = (username, password, callback) => {
                 console.log(`AuthActions actionLogin ${xsrf}:${authToken}`);
                 const asyncSaveAccessKeys = async () => {
                     try {
-                        console.log(`AuthActions actionLogin ${KEY_USERNAME},${username}: ${KEY_PASSWORD},${password}`);
+                        console.log(`AuthActions actionLogin ${KEY_HOST},${host} : ${KEY_USERNAME},${username}: ${KEY_PASSWORD},${password}`);
                         
+                        await AsyncStorage.setItem( KEY_HOST , host);
                         await AsyncStorage.setItem( KEY_PASSWORD , password);
                         await AsyncStorage.setItem( KEY_USERNAME , username);
                         
@@ -105,17 +118,12 @@ export const actionLogin = (username, password, callback) => {
                 };
 
                 asyncSaveAccessKeys().then( () => {
-
                     setAxiosDefaultHeader(xsrf, authToken);
-                    
-                    callback();
-
                     dispatch({
                         type: ACTION_AUTH_REQUEST_SUCCESS,
                         payload: {username: username, password: password, xsrf:xsrf, authToken:authToken}
                     });
                 });
-
 
             }).catch(function (error) {
                 console.warn(error);

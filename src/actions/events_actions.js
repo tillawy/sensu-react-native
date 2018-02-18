@@ -1,7 +1,6 @@
 
-
 import axios from 'axios';
-
+import { AsyncStorage } from 'react-native';
 
 import {
 
@@ -15,7 +14,7 @@ import {
 
 
 import {
-    API_HOST
+    KEY_HOST
 } from '../constants';
 
 
@@ -26,24 +25,35 @@ export const actionEventDetails = (event) => {
     });
 };
 
+
+const apiHost = async () => {
+    const host = await AsyncStorage.getItem(KEY_HOST);
+    return host;
+};
+
+
 export const actionListEvents = () => {
     
     console.log( `EventsActions actionListEvents`);
-    const url = `${API_HOST}/events`;
+
     return (dispatch) => {
-        return axios.get( url ,  { params: {} } ).then((response) => {
-            dispatch({
-                type: ACTION_EVENTS_LIST_REQUEST_SUCCESS,
-                payload: response
+        return apiHost().then((host) => {
+            const url = `${host}/events`;
+            return axios.get( url ,  { params: {} } ).then((response) => {
+                dispatch({
+                    type: ACTION_EVENTS_LIST_REQUEST_SUCCESS,
+                    payload: response
+                });
+            }).catch((error) => {
+                console.warn(error);
+                dispatch({
+                    type: ACTION_EVENTS_LIST_REQUEST_FAILURE,
+                    payload: error
+                });
+                throw error;
             });
-        }).catch((error) => {
-            console.warn(error);
-            dispatch({
-                type: ACTION_EVENTS_LIST_REQUEST_FAILURE,
-                payload: error
-            });
-            throw error;
         });
+
         dispatch({type: ACTION_EVENTS_LIST_REQUEST})
     };
 

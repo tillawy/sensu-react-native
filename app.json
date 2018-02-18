@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "sensu-react-native",
-    "description": "A very interesting project.",
-    "slug": "sensu-mobile-client",
+    "description": "A simple sensu react native client.",
+    "slug": "sensu-react-native",
     "privacy": "public",
     "sdkVersion": "25.0.0",
     "platforms": [

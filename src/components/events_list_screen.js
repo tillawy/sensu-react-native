@@ -38,7 +38,7 @@ class EventsList extends Component {
 
 
     componentDidMount(){
-        console.log("componentDidMount");
+        // console.log("componentDidMount");
         
         this.props.actionListEvents().then(() => {
             console.log("actionListEvents then");
@@ -80,7 +80,7 @@ const dataSource = new ListView.DataSource({
 
 
 function mapStateToProps(state) {
-    console.log( ` ••••••••• EventsList mapStateToProps state.events:`, state.events.entries);
+    // console.log( ` ••••••••• EventsList mapStateToProps state.events:`, state.events.entries);
     return {
         events: state.events.entries,
         dataSource: dataSource.cloneWithRows(state.events.entries)

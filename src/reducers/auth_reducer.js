@@ -2,17 +2,19 @@
 import {AsyncStorage} from 'react-native';
 
 import {
+    ACTION_HOST_CHANGED,
     ACTION_USERNAME_CHANGED,
     ACTION_PASSWORD_CHANGED,
     ACTION_AUTH_REQUEST,
     ACTION_AUTH_REQUEST_SUCCESS,
     ACTION_AUTH_REQUEST_FAILURE,
     ACTION_AUTH_SAVED_CREDENTIALS,
-    ACTION_AUTH_CREDENTIALS_AVAILBLE,
+    ACTION_AUTH_CREDENTIALS_AVAILABLE,
     ACTION_LOGOUT
 } from '../actions/types';
 
 const INITIAL_STATE = {
+    host: '',
     password: '',
     username: '',
     error: '',
@@ -58,7 +60,8 @@ export default (state = INITIAL_STATE, action) => {
     }
 
     switch (action.type) {
-
+        case ACTION_HOST_CHANGED :
+            return { ...state, host: action.payload };
         case ACTION_USERNAME_CHANGED :
             return { ...state, username: action.payload };
         case ACTION_PASSWORD_CHANGED:
@@ -76,6 +79,7 @@ export default (state = INITIAL_STATE, action) => {
             };*/
         case ACTION_AUTH_REQUEST_SUCCESS:
             return { ...state, 
+                host: action.payload.host,
                 username: action.payload.username, 
                 password: action.payload.password,
                 loading: false,
@@ -83,10 +87,11 @@ export default (state = INITIAL_STATE, action) => {
                 authToken: action.payload.authToken,
                 error: '' 
             };
-        case ACTION_AUTH_CREDENTIALS_AVAILBLE:
+        case ACTION_AUTH_CREDENTIALS_AVAILABLE:
             return { ...state, 
                 username: action.payload.username, 
                 password: action.payload.password,
+                host: action.payload.host,
                 loading: false,
                 error: '' 
             }

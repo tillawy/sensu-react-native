@@ -8,17 +8,15 @@ import { Button, Card, CardSection, Input, Spinner } from './common';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { actionCheckSavedTokens, actionLogin, actionUsernameChanged , actionPasswordChanged } from '../actions/auth_actions';
+import { actionCheckSavedTokens, actionHostChanged, actionLogin, actionUsernameChanged , actionPasswordChanged } from '../actions/auth_actions';
 
 
 class LoginForm extends Component {
 
-    
     componentDidMount(){
-        console.log("LoginForm componentDidMount");
+        // console.log("LoginForm componentDidMount");
         this.props.actionCheckSavedTokens();
     };
-
 
     static navigationOptions = {
         title: 'Login'
@@ -33,7 +31,7 @@ class LoginForm extends Component {
     }
 
     renderButton() {
-        console.log( `LoginForm renderButton() this.props.loading: ${this.props.loading}`);
+        // console.log( `LoginForm renderButton() this.props.loading: ${this.props.loading}`);
         if (this.props.loading) {
             return <Spinner size="small" />
         }
@@ -49,7 +47,7 @@ class LoginForm extends Component {
         // const { email, password } = this.state;
         // console.log(`logging in using: email: ${this.props.email}, password: ${this.props.password}`);
 
-        this.props.actionLogin(this.props.username,this.props.password,() => {
+        this.props.actionLogin( this.props.host, this.props.username,this.props.password).then( () => {
             console.log( `done LoginForm ` );
         });
 
@@ -59,6 +57,17 @@ class LoginForm extends Component {
     render() {
         return (
             <Card >
+                <CardSection>
+                    <Input
+                        label="Host:"
+                        placeholder="http://sensu.server ..."
+                        value={this.props.host}
+                        underlineColorAndroid='transparent'
+                        onChangeText={this.props.actionHostChanged.bind(this)}
+                        style={{ height: 20, width: 100}}
+                    />
+                </CardSection>
+
                 <CardSection>
                     <Input
                         label="User:"
@@ -105,14 +114,14 @@ const styles = StyleSheet.create({
 // export default LoginForm;
 
 const mapStateToProps = ({ auth }) => {
-    const { username, password, error, loading } = auth;
-    return { username, password, error, loading };
+    const { host , username, password, error, loading } = auth;
+    return { host, username, password, error, loading };
 };
 
 
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ actionCheckSavedTokens, actionLogin,actionPasswordChanged, actionUsernameChanged }, dispatch);
+    return bindActionCreators({ actionCheckSavedTokens, actionLogin, actionHostChanged ,actionPasswordChanged, actionUsernameChanged }, dispatch);
 }
 
 

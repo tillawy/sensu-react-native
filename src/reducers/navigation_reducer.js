@@ -91,12 +91,12 @@ export default (state = stateForIntroAction, action) => {
             // const acccc = AppNavigator.router.getActionForPathAndParams('Main');
             // const accccState = AppNavigator.router.getStateForAction(acccc);
             console.log("ACTION_LOGOUT !!!");
-            nextState = AppNavigator.router.getStateForAction(
+            /*nextState = AppNavigator.router.getStateForAction(
                 NavigationActions.back(),
                 state
             );
             break;
-            
+            */
     }
 
     // Simply return the original `state` if `nextState` is null or undefined.
